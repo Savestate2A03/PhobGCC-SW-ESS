@@ -524,6 +524,12 @@ namespace ess {
 	  else coords[0] = 128 - coords[0];
 	  if (y_positive) coords[1] += 128;
 	  else coords[1] = 128 - coords[1];
+
+	  // fix bug in LUT, keep origin as origin
+	  if (coords[0] == _intOrigin + 1)
+	    coords[0] = _intOrigin;
+	  if (coords[1] == _intOrigin + 1)
+	    coords[1] = _intOrigin;
 	}
 }
 
@@ -2534,12 +2540,11 @@ void readSticks(int readA, int readC){
 	float hystVal = 0.3;
 	//assign the remapped values to the button struct
 	if(readA){
-	if (_essEnable == ESS_ENABLED) {
+		if (_essEnable == ESS_ENABLED) {
 			// use ESS mapping for WiiVC if enabled
 			btn.Ax = remappedESS[0];
 			btn.Ay = remappedESS[1];
-		}
-		else {
+		} else {
 			float diffAx = (remappedAx+127.5)-btn.Ax;
 			if( (diffAx > (1.0 + hystVal)) || (diffAx < -hystVal) ){
 				btn.Ax = (uint8_t) (remappedAx+127.5);
